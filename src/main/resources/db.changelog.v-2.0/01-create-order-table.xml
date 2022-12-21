@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+
+    <changeSet id="1" author="Yuar">
+        <createTable tableName="order">
+            <column name="id" type="int">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="passenger_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="driver_id" type="int"/>
+            <column name="status" type="varchar(255)"/>
+            <column name="start_position" type="varchar(255)"/>
+            <column name="finish_position" type="varchar(255)"/>
+            <column name="distance" type="double"/>
+            <column name="bill" type="varchar(255)"/>
+            <column name="rating" type="double"/>
+        </createTable>
+
+        <createTable tableName="finish_order">
+            <column name="id" type="int">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="passenger_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="driver_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="start_position" type="varchar(255)"/>
+            <column name="finish_position" type="varchar(255)"/>
+            <column name="distance" type="double"/>
+            <column name="bill" type="varchar(255)"/>
+            <column name="rating" type="double"/>
+        </createTable>
+
+        <addAutoIncrement tableName="order" columnName="id" columnDataType="int" startWith="1" incrementBy="1"/>
+        <addForeignKeyConstraint baseTableName="order" baseColumnNames="passenger_id" constraintName="passengers_users_id_fk" referencedTableName="users"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="order" baseColumnNames="driver_id" constraintName="drivers_users_id_fk" referencedTableName="users"
+                                 referencedColumnNames="id"/>
+        <addAutoIncrement tableName="finish_order" columnName="id" columnDataType="int" startWith="1" incrementBy="1"/>
+        <addForeignKeyConstraint baseTableName="finish_order" baseColumnNames="passenger_id" constraintName="passengers_users_finished_id_fk" referencedTableName="users"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="finish_order" baseColumnNames="driver_id" constraintName="drivers_users_finished_id_fk" referencedTableName="users"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>
