@@ -1,0 +1,49 @@
+
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '2.7.6'
+	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+	mavenCentral()
+}
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.13'
+	testImplementation 'org.projectlombok:lombok:1.18.22'
+	testImplementation 'junit:junit:4.13.1'
+	testImplementation group: 'org.mockito', name: 'mockito-all', version: '1.10.19'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.20'
+	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.5'
+	implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.5'
+	implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
+	implementation group: 'org.liquibase', name: 'liquibase-core', version: '3.8.9'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-jooq', version: '2.2.5.RELEASE'
+	implementation group: 'org.springframework.data', name: 'spring-data-commons', version: '2.6.3'
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+	testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.15.0'
+	testImplementation group: 'com.github.tomakehurst', name: 'wiremock-jre8', version: '2.32.0'
+}
+
+ext {
+	set('springCloudVersion', "2021.0.5")
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
