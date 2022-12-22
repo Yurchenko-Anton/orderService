@@ -65,7 +65,6 @@ public class OrderDriverRepository {
     private ResponseEntity<Order> findOrder(Long id) {
         return dslContext
                 .selectFrom(DSL.table(TABLE_NAME_ORDER))
-                .where(DSL.field(FIELD_DRIVER_ID).equal(id))
                 .fetchInto(Order.class).stream().findFirst()
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
