@@ -1,18 +1,18 @@
 package com.example.action.dto;
 
 import com.example.action.model.Role;
-import lombok.Data;
+import lombok.Value;
 
-@Data
+@Value
 public class User {
 
-    private Long id;
+    Long id;
 
-    private String firstName;
+    String firstName;
 
-    private String lastName;
+    String lastName;
 
-    private String phone;
+    String phone;
 
-    private Role role;
+    Role role;
 }

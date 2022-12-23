@@ -4,6 +4,7 @@ import com.example.action.client.FeignDistanceClient;
 import com.example.action.dto.CreateOrderDTO;
 import com.example.action.dto.Order;
 import com.example.action.repository.OrderAdminRepository;
+import com.example.action.repository.OrderHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,8 @@ import java.util.List;
 public class AdminsService {
 
     private final OrderAdminRepository orderAdminRepository;
+
+    private final OrderHistoryRepository orderHistoryRepository;
 
     private final FeignDistanceClient feignDistanceClient;
 
@@ -37,7 +40,7 @@ public class AdminsService {
     }
 
     public List<Order> userHistory(Long id, Pageable pageable) {
-        return orderAdminRepository.userHistory(id, pageable);
+        return orderHistoryRepository.userOrders(id, pageable);
     }
 
     public ResponseEntity<Order> rejectDriver(Long id) {

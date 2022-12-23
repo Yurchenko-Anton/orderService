@@ -11,5 +11,5 @@ public interface FeignBillClient {
     Double getBill();
 
     @PostMapping
-    void payment(); // will be change
+    void payment(); //Instead of void will be DTO or some parameter when will have bill service
 }

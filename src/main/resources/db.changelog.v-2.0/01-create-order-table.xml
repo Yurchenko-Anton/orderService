@@ -23,7 +23,7 @@
             <column name="rating" type="double"/>
         </createTable>
 
-        <createTable tableName="finish_order">
+        <createTable tableName="order_history">
             <column name="id" type="int">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
@@ -48,10 +48,10 @@
                                  referencedColumnNames="id"/>
         <addForeignKeyConstraint baseTableName="order" baseColumnNames="driver_id" constraintName="drivers_users_id_fk" referencedTableName="users"
                                  referencedColumnNames="id"/>
-        <addAutoIncrement tableName="finish_order" columnName="id" columnDataType="int" startWith="1" incrementBy="1"/>
-        <addForeignKeyConstraint baseTableName="finish_order" baseColumnNames="passenger_id" constraintName="passengers_users_finished_id_fk" referencedTableName="users"
+        <addAutoIncrement tableName="order_history" columnName="id" columnDataType="int" startWith="1" incrementBy="1"/>
+        <addForeignKeyConstraint baseTableName="order_history" baseColumnNames="passenger_id" constraintName="passengers_users_finished_id_fk" referencedTableName="users"
                                  referencedColumnNames="id"/>
-        <addForeignKeyConstraint baseTableName="finish_order" baseColumnNames="driver_id" constraintName="drivers_users_finished_id_fk" referencedTableName="users"
+        <addForeignKeyConstraint baseTableName="order_history" baseColumnNames="driver_id" constraintName="drivers_users_finished_id_fk" referencedTableName="users"
                                  referencedColumnNames="id"/>
     </changeSet>
 </databaseChangeLog>
