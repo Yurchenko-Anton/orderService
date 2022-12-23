@@ -6,7 +6,6 @@ import com.example.action.model.Status;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +17,6 @@ public class OrderAdminRepository {
 
     private final DSLContext dslContext;
 
-    private final static String TABLE_NAME_FINISH_ORDER = "security.finish_order";
     private final static String TABLE_NAME_ORDER = "security.order";
     private final static String FIELD_ID = "id";
     private final static String FIELD_PASSENGER_ID = "passenger_id";
@@ -62,15 +60,6 @@ public class OrderAdminRepository {
                 .where(DSL.field(FIELD_ID).equal(id))
                 .execute();
         return findOrder(id);
-    }
-
-    public List<Order> userHistory(Long id, Pageable pageable) {
-        return dslContext
-                .selectFrom(DSL.table(TABLE_NAME_FINISH_ORDER))
-                .where(DSL.field(FIELD_PASSENGER_ID).equal(id))
-                .limit(pageable.getPageSize())
-                .offset(pageable.getOffset())
-                .fetchInto(Order.class);
     }
 
     public ResponseEntity<Order> rejectDriver(Long id) {

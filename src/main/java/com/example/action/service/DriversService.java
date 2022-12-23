@@ -4,6 +4,7 @@ import com.example.action.client.FeignBillClient;
 import com.example.action.dto.Order;
 import com.example.action.jwt.JwtTokenProvider;
 import com.example.action.repository.OrderDriverRepository;
+import com.example.action.repository.OrderHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,8 @@ import java.util.List;
 public class DriversService {
 
     private final OrderDriverRepository orderRepository;
+
+    private final OrderHistoryRepository orderHistoryRepository;
 
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -31,7 +34,7 @@ public class DriversService {
 
     public ResponseEntity<Double> avgRating(String token) {
         Long id = getUserId(token);
-        return orderRepository.avgRating(id);
+        return orderHistoryRepository.avgRating(id);
     }
 
     public ResponseEntity<Order> finishOrder(String token) {

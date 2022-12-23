@@ -6,21 +6,21 @@ import lombok.Data;
 @Data
 public class Order {
 
-    private Long id;
+    Long id;
 
-    private Long passengerId;
+    Long passengerId;
 
-    private Long driverId;
+    Long driverId;
 
-    private Status status;
+    Status status;
 
-    private String startPosition;
+    String startPosition;
 
-    private String finishPosition;
+    String finishPosition;
 
-    private Double distance;
+    Double distance;
 
-    private String bill;
+    String bill;
 
-    private Double rating;
+    Double rating;
 }

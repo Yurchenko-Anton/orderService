@@ -4,10 +4,10 @@ import com.example.action.client.FeignBillClient;
 import com.example.action.dto.Order;
 import com.example.action.jwt.JwtTokenProvider;
 import com.example.action.repository.OrderDriverRepository;
+import com.example.action.repository.OrderHistoryRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.AllArgsConstructor;
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -19,10 +19,11 @@ import org.springframework.http.ResponseEntity;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
 @AllArgsConstructor
@@ -32,10 +33,13 @@ public class DriversServiceTest {
     private OrderDriverRepository orderRepository;
 
     @Mock
-    private JwtTokenProvider jwtTokenProvider;
+    private OrderHistoryRepository orderHistoryRepository;
 
     @Mock
     private FeignBillClient feignBillClient;
+
+    @Mock
+    private JwtTokenProvider jwtTokenProvider;
 
     @InjectMocks
     private DriversService driversService;
@@ -45,45 +49,47 @@ public class DriversServiceTest {
     private final Claims CLAIMS = Jwts.claims().setSubject("1");
 
     @Test
-    public void emptyOrders() {
-        List<Order> orderList = new ArrayList<>();
+    public void shouldGetEmptyOrders() {
+        List<Order> orders = new ArrayList<>();
 
-        when(orderRepository.emptyOrders()).thenReturn(orderList);
+        when(orderRepository.emptyOrders()).thenReturn(orders);
 
-        Assertions.assertThat(driversService.emptyOrders()).isEmpty();
-        Mockito.verify(orderRepository, Mockito.times(1)).emptyOrders();
+        assertThat(driversService.emptyOrders()).isEmpty();
+        verify(orderRepository, Mockito.times(1)).emptyOrders();
     }
 
     @Test
-    public void acceptOrder() {
+    public void shouldAcceptOrder() {
         Order order = new Order();
 
         when(jwtTokenProvider.decodeToken(anyString())).thenReturn(CLAIMS);
         when(orderRepository.acceptOrder(anyLong(), anyLong())).thenReturn(ResponseEntity.ok(order));
 
-        Assertions.assertThat(driversService.acceptOrder(anyLong(), JWT_TOKEN)).isEqualTo(ResponseEntity.ok(order));
-        Mockito.verify(orderRepository, times(1)).acceptOrder(anyLong(), anyLong());
+        assertThat(driversService.acceptOrder(anyLong(), JWT_TOKEN)).isEqualTo(ResponseEntity.ok(order));
+        verify(orderRepository, times(1)).acceptOrder(anyLong(), anyLong());
     }
 
     @Test
-    public void avgRating() {
+    public void shouldGetAvgDriverRating() {
 
         when(jwtTokenProvider.decodeToken(anyString())).thenReturn(CLAIMS);
-        when(orderRepository.avgRating(anyLong())).thenReturn(ResponseEntity.ok(4.5));
+        when(orderHistoryRepository.avgRating(anyLong())).thenReturn(ResponseEntity.ok(4.5));
 
-        Assertions.assertThat(driversService.avgRating(JWT_TOKEN)).isEqualTo(ResponseEntity.ok(4.5));
-        Mockito.verify(orderRepository, times(1)).avgRating(anyLong());
+        assertThat(driversService.avgRating(JWT_TOKEN)).isEqualTo(ResponseEntity.ok(4.5));
+        verify(orderHistoryRepository, times(1)).avgRating(anyLong());
     }
 
     @Test
-    public void finishOrder() {
+    public void shouldFinishOrder() {
         Order order = new Order();
+        Double bill = 100.0;
 
         when(jwtTokenProvider.decodeToken(anyString())).thenReturn(CLAIMS);
+        when(feignBillClient.getBill()).thenReturn(bill);
         when(orderRepository.finishDriverOrder(anyLong())).thenReturn(ResponseEntity.ok(order));
 
-        Assertions.assertThat(driversService.finishOrder(JWT_TOKEN)).isEqualTo(ResponseEntity.ok(order));
-        Mockito.verify(orderRepository, times(1)).finishDriverOrder(anyLong());
+        assertThat(driversService.finishOrder(JWT_TOKEN)).isEqualTo(ResponseEntity.ok(order));
+        verify(orderRepository, times(1)).finishDriverOrder(anyLong());
 
     }
 }

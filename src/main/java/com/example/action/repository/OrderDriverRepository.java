@@ -10,15 +10,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static org.jooq.impl.DSL.avg;
-
 @Service
 @RequiredArgsConstructor
 public class OrderDriverRepository {
 
     private final DSLContext dslContext;
 
-    private final static String TABLE_NAME_FINISH_ORDER = "security.finish_order";
     private final static String TABLE_NAME_ORDER = "security.order";
     private final static String FIELD_ID = "id";
     private final static String FIELD_PASSENGER_ID = "passenger_id";
@@ -41,16 +38,7 @@ public class OrderDriverRepository {
                 .set(DSL.field(FIELD_STATUS), Status.PERFORMING.name())
                 .where(DSL.field(FIELD_ID).equal(orderId))
                 .execute();
-
         return findOrder(driverId);
-    }
-
-    public ResponseEntity<Double> avgRating(Long id) {
-        return ResponseEntity.ok((double) dslContext
-                .select(avg(DSL.field(FIELD_RATING).cast(Double.class)))
-                .from(DSL.table(TABLE_NAME_FINISH_ORDER))
-                .where(DSL.field(FIELD_DRIVER_ID).equal(id))
-                .execute());
     }
 
     public ResponseEntity<Order> finishDriverOrder(Long id) {

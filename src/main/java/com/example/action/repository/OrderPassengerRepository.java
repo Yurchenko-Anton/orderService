@@ -6,7 +6,6 @@ import com.example.action.model.Status;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
 import org.jooq.impl.DSL;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +17,6 @@ public class OrderPassengerRepository {
 
     private final DSLContext dslContext;
 
-    private final static String TABLE_NAME_FINISH_ORDER = "security.finish_order";
     private final static String TABLE_NAME_ORDER = "security.order";
     private final static String FIELD_ID = "id";
     private final static String FIELD_PASSENGER_ID = "passenger_id";
@@ -39,15 +37,6 @@ public class OrderPassengerRepository {
         return ResponseEntity.ok(createOrderDTO);
     }
 
-    public List<Order> userOrders(Long id, Pageable pageable) {
-        return dslContext
-                .selectFrom(DSL.table(TABLE_NAME_FINISH_ORDER))
-                .where(DSL.field(FIELD_PASSENGER_ID).equal(id))
-                .limit(pageable.getPageSize())
-                .offset(pageable.getOffset())
-                .fetchInto(Order.class);
-    }
-
     public List<Order> activeOrder(Long id) {
         return dslContext
                 .selectFrom(DSL.table(TABLE_NAME_ORDER))
@@ -63,10 +52,7 @@ public class OrderPassengerRepository {
                 .where(DSL.field(FIELD_ID).equal(orderId).and(DSL.field(FIELD_STATUS).equal(Status.ARRIVED.name()))
                         .and(DSL.field(FIELD_PASSENGER_ID).equal(id)))
                 .execute();
-        Order order = findOrder(orderId);
-        deleteFinishedOrder(order);
-        addToHistory(order);
-        return order;
+        return findOrder(orderId);
     }
 
     private Order findOrder(Long id) {
@@ -78,32 +64,10 @@ public class OrderPassengerRepository {
                 .findFirst().orElseThrow();
     }
 
-    private void deleteFinishedOrder(Order order) {
+    public void deleteFinishedOrder(Order order) {
         dslContext
                 .deleteFrom(DSL.table(TABLE_NAME_ORDER))
                 .where(DSL.field(FIELD_ID).equal(order.getId()))
-                .execute();
-    }
-
-    private void addToHistory(Order order) {
-        dslContext
-                .insertInto(DSL.table(TABLE_NAME_FINISH_ORDER))
-                .columns(DSL.field(FIELD_PASSENGER_ID),
-                        DSL.field(FIELD_DRIVER_ID),
-                        DSL.field(FIELD_STATUS),
-                        DSL.field(FIELD_START_POSITION),
-                        DSL.field(FIELD_FINISH_POSITION),
-                        DSL.field(FIELD_DISTANCE),
-                        DSL.field(FIELD_BILL),
-                        DSL.field(FIELD_RATING))
-                .values(order.getPassengerId(),
-                        order.getDriverId(),
-                        order.getStatus().name(),
-                        order.getStartPosition(),
-                        order.getFinishPosition(),
-                        order.getDistance(),
-                        order.getBill(),
-                        order.getRating())
                 .execute();
     }
 }

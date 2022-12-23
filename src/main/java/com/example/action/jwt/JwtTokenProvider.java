@@ -21,6 +21,8 @@ public class JwtTokenProvider {
     @Value("${jwt.secret}")
     private String secretKey;
 
+    private static final String ROLE = "role";
+
     @PostConstruct
     protected void init() {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
@@ -40,7 +42,7 @@ public class JwtTokenProvider {
     }
 
     private Role getRole(String token) {
-        return Role.valueOf(Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("role").toString());
+        return Role.valueOf(Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get(ROLE).toString());
     }
 
     public Claims decodeToken(String token) {
