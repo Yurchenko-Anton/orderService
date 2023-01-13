@@ -21,14 +21,14 @@ public class DriverLocationProcessor {
         try {
             Order order = orderDriverRepository.findOrderByDriverId(Long.parseLong(id)).getBody();
             if (order != null) {
-                sendMessage(order.getPassengerId().toString(), "Driver : " + id + " on the street : " + msg);
+                sendDriverLocationToClient(order.getPassengerId().toString(), "Driver : " + id + " on the street : " + msg);
             } else log.info("Driver " + id + " dosen't have an active order");
         } catch (Exception e) {
             log.error(e.toString());
         }
     }
 
-    public void sendMessage(String passengerId, String msg) {
+    private void sendDriverLocationToClient(String passengerId, String msg) {
         kafkaTemplate.send(PRODUCER_DRIVER_LOCATION_TO_CLIENT_TOPIC, passengerId, msg);
     }
 }
