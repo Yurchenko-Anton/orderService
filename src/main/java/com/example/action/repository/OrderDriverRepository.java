@@ -50,6 +50,17 @@ public class OrderDriverRepository {
         return findOrder(id);
     }
 
+    public ResponseEntity<Order> findOrderByDriverId(Long id) {
+        return dslContext
+                .selectFrom(DSL.table(TABLE_NAME_ORDER))
+                .where(DSL.field(FIELD_DRIVER_ID).equal(id))
+                .fetchInto(Order.class)
+                .stream()
+                .findFirst()
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
     private ResponseEntity<Order> findOrder(Long id) {
         return dslContext
                 .selectFrom(DSL.table(TABLE_NAME_ORDER))
