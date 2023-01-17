@@ -38,6 +38,13 @@ public class OrderHistoryRepository {
                 .fetchInto(Order.class);
     }
 
+    public int userOrdersSize(Long id) {
+        return dslContext
+                .selectFrom(DSL.table(TABLE_NAME_ORDER_HISTORY))
+                .where(DSL.field(FIELD_PASSENGER_ID).equal(id))
+                .fetchInto(Order.class).size();
+    }
+
     public ResponseEntity<Double> avgRating(Long id) {
         return ResponseEntity.ok((double) dslContext
                 .select(avg(DSL.field(FIELD_RATING).cast(Double.class)))

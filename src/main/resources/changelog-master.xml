@@ -9,5 +9,6 @@
     </preConditions>
 
     <include file="db.changelog.v-2.0/01-changeset-order-table.xml" relativeToChangelogFile="true"/>
+    <include file="db.changelog.v-2.0/10-create-promo-table.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+
+    <changeSet id="10001" author="ayurchenko">
+
+        <createTable tableName="promo">
+            <column name="id" type="int">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="user_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="promo_name" type="varchar(255)"/>
+            <column name="discount" type="int"/>
+            <column name="is_active" type="varchar(255)"/>
+        </createTable>
+
+        <addAutoIncrement tableName="promo" columnName="id" columnDataType="int" startWith="1" incrementBy="1"/>
+        <addForeignKeyConstraint baseTableName="promo" baseColumnNames="user_id" constraintName="user_id_fk" referencedTableName="users"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>
