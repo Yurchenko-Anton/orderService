@@ -15,13 +15,15 @@
             <column name="user_id" type="int">
                 <constraints nullable="false"/>
             </column>
-            <column name="promo_name" type="varchar(255)"/>
+            <column name="promo_types_id" type="int"/>
             <column name="discount" type="int"/>
             <column name="is_active" type="varchar(255)"/>
         </createTable>
 
         <addAutoIncrement tableName="promo" columnName="id" columnDataType="int" startWith="1" incrementBy="1"/>
         <addForeignKeyConstraint baseTableName="promo" baseColumnNames="user_id" constraintName="user_id_fk" referencedTableName="users"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="promo" baseColumnNames="promo_types_id" constraintName="promo_types_id_fk" referencedTableName="promo_types"
                                  referencedColumnNames="id"/>
     </changeSet>
 </databaseChangeLog>

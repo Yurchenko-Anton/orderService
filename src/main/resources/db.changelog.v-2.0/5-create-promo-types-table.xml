@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+
+    <changeSet id="10002" author="ayurchenko">
+
+        <createTable tableName="promo_types">
+            <column name="id" type="int">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="promo_type" type="varchar(255)"/>
+            <column name="discount" type="int"/>
+            <column name="trips_count" type="int"/>
+        </createTable>
+
+        <addAutoIncrement tableName="promo_types" columnName="id" columnDataType="int" startWith="1" incrementBy="1"/>
+    </changeSet>
+</databaseChangeLog>

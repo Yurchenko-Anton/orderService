@@ -1,8 +1,10 @@
 package com.example.action.web;
 
 import com.example.action.dto.Promo;
+import com.example.action.dto.PromoTypeDTO;
 import com.example.action.service.PromoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,12 +21,18 @@ public class PromoController {
     private final PromoService promoService;
 
     @GetMapping
-    public List<Promo> getAllPromo(@RequestHeader(HEADER) String token) {
+    public List<Promo> getAllPromo(@RequestHeader(HEADER) String token){
         return promoService.getAllPromo(token);
     }
 
     @PostMapping()
     public List<Promo> activatePromo(@RequestHeader(HEADER) String token, @RequestBody List<Promo> promoId) {
         return promoService.activatePromo(token, promoId);
+    }
+
+    @PreAuthorize("hasAuthority('users:admin')")
+    @PostMapping("/new")
+    public ResponseEntity<PromoTypeDTO> addNewPromo(@RequestBody PromoTypeDTO promoTypeDTO){
+        return promoService.createNewPromo(promoTypeDTO);
     }
 }
