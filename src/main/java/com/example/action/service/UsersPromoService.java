@@ -1,12 +1,12 @@
 package com.example.action.service;
 
-import com.example.action.dto.Promo;
 import com.example.action.dto.PromoTypeDTO;
+import com.example.action.dto.UsersPromoDTO;
 import com.example.action.jwt.JwtTokenProvider;
 import com.example.action.model.PromoType;
 import com.example.action.repository.OrderHistoryRepository;
-import com.example.action.repository.PromoRepository;
 import com.example.action.repository.PromoTypeRepository;
+import com.example.action.repository.UsersPromoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -17,37 +17,37 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class PromoService {
+public class UsersPromoService {
 
     private final OrderHistoryRepository orderHistoryRepository;
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    private final PromoRepository promoRepository;
+    private final UsersPromoRepository usersPromoRepository;
 
     private final PromoTypeRepository promoTypeRepository;
 
     private final PromoCacheService promoCacheService;
 
-    public List<Promo> getAllPromo(String token) {
+    public List<UsersPromoDTO> getAllUserPromo(String token) {
         setPromoCache();
 
-        addPromoIfPossible(token);
+        givePromoToUserIfPossible(token);
 
         Long userId = getUserId(token);
 
-        return promoRepository.getPromos(userId);
+        return usersPromoRepository.getAllUserPromo(userId);
     }
 
-    public List<Promo> activatePromo(String token, List<Promo> promoId) {
+    public List<UsersPromoDTO> activateUserPromo(String token, List<UsersPromoDTO> usersPromoDTO) {
         long userId = getUserId(token);
 
-        promoId.forEach(promo -> promoRepository.activationPromo(userId, promo.getId()));
+        usersPromoDTO.forEach(usersPromoDTOId -> usersPromoRepository.activationPromo(userId, usersPromoDTOId.getId()));
 
-        return promoRepository.getActivatedUserPromo(userId);
+        return usersPromoRepository.getActivatedUserPromo(userId);
     }
 
-    public ResponseEntity<PromoTypeDTO> createNewPromo(PromoTypeDTO promoTypeDTO) {
+    public ResponseEntity<PromoTypeDTO> createNewPromoType(PromoTypeDTO promoTypeDTO) {
         if (!validatePromoType(promoTypeDTO)) {
             promoTypeRepository.createPromoType(promoTypeDTO);
             return ResponseEntity.ok(promoTypeDTO);
@@ -59,15 +59,15 @@ public class PromoService {
         promoCacheService.addValuesToCache(promoTypeDTOList);
     }
 
-    private void addPromoIfPossible(String token) {
+    private void givePromoToUserIfPossible(String token) {
         Long userId = getUserId(token);
 
         int tripsCount = orderHistoryRepository.userOrdersSize(userId);
 
-        suitablePromo(tripsCount)
+        suitablePromoToUserByTripsCount(tripsCount)
                 .stream()
                 .filter(promoTypeDTO -> checkIfNotExist(userId, promoTypeDTO))
-                .forEach(promoTypeDTO -> promoRepository.addPromo(userId, promoTypeDTO));
+                .forEach(promoTypeDTO -> usersPromoRepository.addPromoToUser(userId, promoTypeDTO));
     }
 
     private Long getUserId(String token) {
@@ -75,7 +75,7 @@ public class PromoService {
         return Long.parseLong(id);
     }
 
-    private List<PromoTypeDTO> suitablePromo(int tripsCount) {
+    private List<PromoTypeDTO> suitablePromoToUserByTripsCount(int tripsCount) {
         return promoCacheService.getCacheValues()
                 .stream()
                 .filter(promoTypeDTO -> promoTypeDTO.getTripsCount() <= tripsCount)
@@ -83,7 +83,7 @@ public class PromoService {
     }
 
     private boolean checkIfNotExist(Long userId, PromoTypeDTO promoTypeDTO) {
-        return promoTypeDTO != null && promoRepository.checkIfNotExist(userId, promoTypeDTO);
+        return promoTypeDTO != null && usersPromoRepository.checkIfNotExist(userId, promoTypeDTO);
     }
 
     private boolean validatePromoType(PromoTypeDTO promoTypeDTO) {
