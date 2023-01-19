@@ -8,7 +8,7 @@
 
     <changeSet id="10002" author="ayurchenko">
 
-        <createTable tableName="promo_types">
+        <createTable tableName="promo_config">
             <column name="id" type="int">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
@@ -17,6 +17,6 @@
             <column name="trips_count" type="int"/>
         </createTable>
 
-        <addAutoIncrement tableName="promo_types" columnName="id" columnDataType="int" startWith="1" incrementBy="1"/>
+        <addAutoIncrement tableName="promo_config" columnName="id" columnDataType="int" startWith="1" incrementBy="1"/>
     </changeSet>
 </databaseChangeLog>

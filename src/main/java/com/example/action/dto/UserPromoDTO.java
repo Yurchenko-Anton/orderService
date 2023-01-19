@@ -3,9 +3,7 @@ package com.example.action.dto;
 import lombok.Value;
 
 @Value
-public class PromoTypeDTO {
+public class UserPromoDTO {
     int id;
-    String promoType;
     int discount;
-    int tripsCount;
 }
